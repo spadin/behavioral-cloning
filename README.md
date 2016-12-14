@@ -4,16 +4,25 @@ WIP, this doesn't work yet.
 
 ## Before you begin
 
-You'll need some data. You can generate your data by running the simulator in training mode, or download the [dataset from class.][1]
+You'll need some data. You can generate your data by running the simulator in
+training mode, or download the [dataset from class.][1]
 
-## Preparing the data
+## Splitting the data
 
 The data from class needs to be split into a training set, validation set, and
 test set. This can be done any number of times, but must be done at least once.
+This will write three files that can be loaded later for extracting features
+from related images.
 
 ```sh
-$ python prepare.py
+$ python split.py
 ```
+
+Writes:
+
+  * data/train_driving_log.csv
+  * data/valid_driving_log.csv
+  * data/test_driving_log.csv
 
 ## Training the model
 
@@ -25,7 +34,8 @@ Training the model will result in two files being generated. `model.json`
 includes the model architecture. `model.h5` includes the model weights that
 were just trained.
 
-Note: if the model doesn't find training, validation, and test datasets in `data` it will try running `prepare`.
+Note: if the model doesn't find training, validation, and test datasets in
+`data` it will try running `prepare`.
 
 ## Run the drive server
 
