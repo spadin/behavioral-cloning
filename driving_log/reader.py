@@ -1,6 +1,6 @@
 import csv
 
-class DrivingLogReader:
+class Reader:
     """
     Helper class for loading and formatting driving log data.
     """
@@ -46,7 +46,7 @@ class DrivingLogReader:
         return (self.__format_row(row) for row in self.__csv_rows())
 
 if __name__ == "__main__":
-    reader = DrivingLogReader("./data/driving_log.csv")
+    reader = Reader("./data/driving_log.csv")
 
     print("Formatted data from ./data/driving_log.csv")
 
