@@ -18,7 +18,7 @@ class DrivingLogReader:
         about.
         """
         image = row[0]
-        steering = row[3]
+        steering = float(row[3])
 
         return (image, steering)
 
