@@ -1,4 +1,4 @@
-from reader import Reader
+from .reader import Reader
 from scipy.misc import imread
 
 class FeatureExtractor:
