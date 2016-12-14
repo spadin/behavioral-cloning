@@ -27,7 +27,7 @@ class DrivingLogReader:
         Opens the driving log csv file and yields each row.
         """
         with open(self.filepath) as csv_file:
-            csvreader = csv.reader(csv_file)
+            csvreader = csv.reader(csv_file, skipinitialspace=True)
             next(csvreader) # skip header row
             for row in csvreader:
                 yield row
