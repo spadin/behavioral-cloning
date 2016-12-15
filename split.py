@@ -1,67 +1,55 @@
 import csv
 import math
 
-class SplitTrainValidTest:
-    def __init__(self, outdir='data', infilename="driving_log.csv", pct_train=0.5, pct_valid=0.25, pct_test=0.25):
-        self.infilename = infilename
-        self.outdir = outdir
-        self.pct_train = pct_train
-        self.pct_valid = pct_valid
-        self.pct_test = pct_test
+def filepath(dirname, filename):
+    return "{}/{}".format(dirname, filename)
 
-    def __filepath(self, filename):
-        return "{}/{}".format(self.outdir, filename)
+def infilepath(dirname, filename):
+    return filepath(dirname, filename)
 
-    def __infilepath(self):
-        return self.__filepath(self.infilename)
+def outfilepaths(dirname):
+    return (filepath(dirname, "train_driving_log.csv"),
+            filepath(dirname, "valid_driving_log.csv"),
+            filepath(dirname, "test_driving_log.csv"))
 
-    def __train_filepath(self):
-        return self.__filepath("train_driving_log.csv")
+def read(filepath):
+    with open(filepath, "r") as f:
+        csvreader = csv.reader(f)
+        header = next(csvreader)
+        rows = [row for row in csvreader]
 
-    def __valid_filepath(self):
-        return self.__filepath("valid_driving_log.csv")
+    return (header, rows)
 
-    def __test_filepath(self):
-        return self.__filepath("test_driving_log.csv")
+def write(filepath, header, rows):
+    with open(filepath, "w") as f:
+        csvwriter = csv.writer(f)
+        csvwriter.writerow(header)
+        csvwriter.writerows(rows)
 
-    def __read_infile(self):
-        with open(self.__infilepath(), "r") as infile:
-            csvreader = csv.reader(infile)
-            header = next(csvreader)
-            rows = []
+def slices(rows, pct_train, pct_valid, pct_test):
+    nb_rows = len(rows)
 
-            for row in csvreader:
-                rows.append(row)
+    split_1 = math.floor(nb_rows * pct_train)
+    split_2 = split_1 + math.floor(nb_rows * pct_valid)
+    split_3 = split_2 + math.floor(nb_rows * pct_test)
 
-        return (header, rows)
+    return (slice(0, split_1),
+            slice(split_1, split_2),
+            slice(split_2, split_3))
 
-    def __slices(self, rows):
-        nb_rows = len(rows)
+def slice_rows(rows, pct_train, pct_valid, pct_test):
+    train, valid, test = slices(rows, pct_train, pct_valid, pct_test)
+    return (rows[train], rows[valid], rows[test])
 
-        split_1 = math.floor(nb_rows * self.pct_train)
-        split_2 = split_1 + math.floor(nb_rows * self.pct_valid)
-        split_3 = split_2 + math.floor(nb_rows * self.pct_test)
+def split_train_valid_test(dirname='data', infilename="driving_log.csv", pct_train=0.5, pct_valid=0.25, pct_test=0.25):
+    infile = infilepath(dirname, infilename)
+    (header, rows) = read(infile)
+    train_slice, valid_slice, test_slice = slice_rows(rows, pct_train, pct_valid, pct_test)
+    train_filepath, valid_filepath, test_filepath = outfilepaths(dirname)
 
-        train = slice(0, split_1)
-        valid = slice(split_1, split_2)
-        test = slice(split_2, split_3)
-
-        return (rows[train], rows[valid], rows[test])
-
-    def __write(self, outfilepath, header, rows):
-        with open(outfilepath, "w") as f:
-            csvwriter = csv.writer(f)
-            csvwriter.writerow(header)
-            csvwriter.writerows(rows)
-
-    def execute(self):
-        header, rows = self.__read_infile()
-        train_slice, valid_slice, test_slice = self.__slices(rows)
-
-        self.__write(self.__train_filepath(), header, train_slice)
-        self.__write(self.__valid_filepath(), header, valid_slice)
-        self.__write(self.__test_filepath(), header, test_slice)
+    write(train_filepath, header, train_slice)
+    write(valid_filepath, header, valid_slice)
+    write(test_filepath, header, test_slice)
 
 if __name__ == "__main__":
-    split = SplitTrainValidTest()
-    split.execute()
+    split_train_valid_test()
