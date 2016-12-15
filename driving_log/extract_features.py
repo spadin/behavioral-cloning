@@ -1,7 +1,7 @@
 from .reader import Reader
 from scipy.misc import imread
 
-class FeatureExtractor:
+class ExtractFeatures:
     """
     Lazily extracts features from the driving log file using a DrivingLogReader
     to iterate through the driving log data
@@ -26,17 +26,17 @@ class FeatureExtractor:
         for image, steering in self.data:
             yield steering
 
-    def features_and_labels(self):
+    def execute(self):
         features = self.features()
         labels = self.labels()
         return zip(features, labels)
 
 if __name__ == "__main__":
-    extractor = FeatureExtractor()
+    extractor = ExtractFeatures()
 
     i = 0
-    features_and_labels = extractor.features_and_labels()
+    data = extractor.execute()
     while i < 1:
-        feature, label = next(features_and_labels)
+        feature, label = next(data)
         print(feature, label)
         i += 1
