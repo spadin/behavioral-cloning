@@ -2,9 +2,10 @@ from preprocess import preprocess
 from keras.layers import Activation, Convolution2D, Dense, Dropout, Flatten, Input, MaxPooling2D
 from keras.models import Sequential
 import numpy as np
+import json
 
 epochs = 1
-size = (16,32, 3)
+size = (16, 32, 3)
 flatten = False
 
 train_data = preprocess(datadir="data", filename="train_driving_log.csv", size=size, flatten=flatten)
@@ -34,3 +35,9 @@ history = model.fit_generator(generator=train_data,
 h = history.history
 print("training accuracy: {}".format(h["acc"][-1]))
 print("validation accuracy: {}".format(h["val_acc"][-1]))
+
+j = model.to_json()
+with open("model.json", "w") as f:
+    json.dump(j, f)
+
+model.save_weights("model.h5")
