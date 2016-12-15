@@ -1,6 +1,6 @@
 import csv
 
-class Reader:
+class Read:
     """
     Helper class for loading and formatting driving log data.
     """
@@ -32,7 +32,7 @@ class Reader:
             for row in csvreader:
                 yield row
 
-    def data(self):
+    def execute(self):
         """
         Formats each csv row and yields data formatted as a list with an
         image path and a steering angle.
@@ -46,9 +46,9 @@ class Reader:
         return (self.__format_row(row) for row in self.__csv_rows())
 
 if __name__ == "__main__":
-    reader = Reader("./data/driving_log.csv")
+    datas = Read("./data/driving_log.csv").execute()
 
     print("Formatted data from ./data/driving_log.csv")
 
-    for data in reader.data():
+    for data in datas:
         print(data)

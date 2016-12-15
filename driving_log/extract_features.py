@@ -1,4 +1,4 @@
-from .reader import Reader
+from .read import Read
 from scipy.misc import imread
 
 class ExtractFeatures:
@@ -12,8 +12,7 @@ class ExtractFeatures:
         self.__setup_data()
 
     def __setup_data(self):
-        reader = Reader(self.__datapath(self.filename))
-        self.data = reader.data()
+        self.data = Read(self.__datapath(self.filename)).execute()
 
     def __datapath(self, image):
         return "{}/{}".format(self.datadir, image)
