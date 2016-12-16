@@ -1,40 +1,49 @@
-from preprocess import preprocess
-from keras.layers import Activation, Convolution2D, Dense, Dropout, Flatten, Input, MaxPooling2D
+from generate import generate
+from keras.layers import Activation, Convolution2D, Dense, Dropout, Flatten, Input, Lambda, MaxPooling2D
 from keras.models import Sequential
+from keras.optimizers import Adam
+from keras.layers.normalization import BatchNormalization
+from keras.layers.advanced_activations import ELU, LeakyReLU
 import numpy as np
 import json
 
-epochs = 1
-size = (16, 32, 3)
-flatten = False
+samples_per_epoch=128
+nb_epochs = 1
 
-train_data = preprocess(datadir="data", filename="train_driving_log.csv", size=size, flatten=flatten)
-valid_data = preprocess(datadir="data", filename="valid_driving_log.csv", size=size, flatten=flatten)
-test_data = preprocess(datadir="data", filename="test_driving_log.csv", size=size, flatten=flatten)
+train, valid, test = generate("data/driving_log.csv",
+                              pct_train=0.8,
+                              pct_valid=0.1,
+                              pct_test=0.1)
+
+def resize(x):
+    import tensorflow as tf
+    return tf.image.resize_images(x, (80, 160))
+
+def normalize(x):
+    return x / 127.5 - 1
 
 model = Sequential()
-model.add(Convolution2D(64, 3, 3, border_mode='valid', input_shape=size))
-model.add(MaxPooling2D(pool_size=(2,2), strides=None, border_mode='valid'))
-model.add(Convolution2D(64, 3, 3, border_mode='valid'))
-model.add(MaxPooling2D(pool_size=(2,2), strides=None, border_mode='valid'))
+model.add(Lambda(resize, input_shape=(160, 320, 3), name="resize"))
+model.add(Lambda(normalize, name="normalize"))
+model.add(BatchNormalization())
 model.add(Flatten())
-# model.add(Dense(1, input_dim=np.prod(size)))
+
 model.add(Dense(1))
-model.add(Activation('relu'))
+model.add(LeakyReLU())
 
-model.compile(loss='mean_squared_error',
-              optimizer='adam',
-              metrics=['accuracy'])
+model.compile(loss='mse', optimizer=Adam(lr=0.1))
 
-history = model.fit_generator(generator=train_data,
-                              samples_per_epoch=128,
-                              nb_epoch=epochs,
-                              validation_data=valid_data,
-                              nb_val_samples=1000)
+history = model.fit_generator(generator=train,
+                              samples_per_epoch=samples_per_epoch,
+                              nb_epoch=nb_epochs,
+                              validation_data=valid,
+                              nb_val_samples=256,
+                              callbacks=[])
+
 
 h = history.history
-print("training accuracy: {}".format(h["acc"][-1]))
-print("validation accuracy: {}".format(h["val_acc"][-1]))
+print("training loss: {}".format(h["loss"][-1]))
+print("validation loss: {}".format(h["val_loss"][-1]))
 
 j = model.to_json()
 with open("model.json", "w") as f:
