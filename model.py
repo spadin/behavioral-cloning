@@ -5,6 +5,7 @@ from keras.models import Sequential
 from keras.optimizers import Adam
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import ELU, LeakyReLU
+from keras.applications.inception_v3 import InceptionV3
 import numpy as np
 import json
 import math
