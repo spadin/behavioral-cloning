@@ -10,11 +10,12 @@ import numpy as np
 import json
 import math
 
-nb_epochs = 12
-nb_proportion = 4
-total_examples = 14424
-pct_train = 0.8
-pct_valid = 0.1
+nb_epochs = 64
+nb_proportion = 8
+total_examples = 18144
+# total_examples = 100
+pct_train = 0.7
+pct_valid = 0.2
 pct_test = 0.1
 
 nb_train = math.floor(math.floor(total_examples * pct_train) / nb_proportion)
@@ -38,12 +39,41 @@ model = Sequential()
 model.add(Lambda(resize, input_shape=(160, 320, 3), name="resize"))
 model.add(Lambda(normalize, name="normalize"))
 model.add(BatchNormalization())
+
+model.add(Convolution2D(32, 3, 3))
+model.add(LeakyReLU())
+model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Dropout(0.75))
+
+model.add(Convolution2D(16, 3, 3))
+model.add(LeakyReLU())
+model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Dropout(0.5))
+
+model.add(Convolution2D(32, 3, 3))
+model.add(LeakyReLU())
+model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Dropout(0.5))
+
+model.add(Convolution2D(16, 3, 3))
+model.add(LeakyReLU())
+model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Dropout(0.5))
+
 model.add(Flatten())
+
+model.add(Dense(64))
+model.add(LeakyReLU())
+model.add(Dropout(0.5))
+
+model.add(Dense(32))
+model.add(LeakyReLU())
+model.add(Dropout(0.5))
 
 model.add(Dense(1))
 model.add(LeakyReLU())
 
-model.compile(loss='mse', optimizer="adam")
+model.compile(loss='mse', optimizer=Adam(lr=0.00005))
 
 history = model.fit_generator(generator=train,
                               samples_per_epoch=nb_train,
