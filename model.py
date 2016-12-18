@@ -10,9 +10,9 @@ import numpy as np
 import json
 import math
 
-nb_epochs = 64
+nb_epochs = 16
 nb_proportion = 8
-total_examples = 18144
+total_examples = 19519
 # total_examples = 100
 pct_train = 0.7
 pct_valid = 0.2
@@ -42,22 +42,22 @@ model.add(BatchNormalization())
 
 model.add(Convolution2D(32, 3, 3))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.75))
 
 model.add(Convolution2D(16, 3, 3))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
 model.add(Convolution2D(32, 3, 3))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(MaxPooling2D(pool_size=(1, 1)))
 model.add(Dropout(0.5))
 
 model.add(Convolution2D(16, 3, 3))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(MaxPooling2D(pool_size=(1, 1)))
 model.add(Dropout(0.5))
 
 model.add(Flatten())
