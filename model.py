@@ -9,15 +9,16 @@ import numpy as np
 import json
 import math
 
-nb_epochs = 1
-# total_examples = 14424
-total_examples = 100
+nb_epochs = 12
+nb_proportion = 4
+total_examples = 14424
 pct_train = 0.8
 pct_valid = 0.1
 pct_test = 0.1
 
-nb_train = math.floor(total_examples * pct_train)
-nb_valid = math.floor(total_examples * pct_valid)
+nb_train = math.floor(math.floor(total_examples * pct_train) / nb_proportion)
+nb_train = math.floor(math.floor(total_examples * pct_train) / nb_proportion)
+nb_valid = math.floor(math.floor(total_examples * pct_valid) / nb_proportion)
 nb_test = math.floor(total_examples * pct_test)
 
 train, valid, test = generate("data/driving_log.csv",
