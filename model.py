@@ -1,4 +1,5 @@
 from generate import generate
+from save import save
 from keras.layers import Activation, Convolution2D, Dense, Dropout, Flatten, Input, Lambda, MaxPooling2D
 from keras.models import Sequential
 from keras.optimizers import Adam
@@ -6,14 +7,23 @@ from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import ELU, LeakyReLU
 import numpy as np
 import json
+import math
 
-samples_per_epoch=128
 nb_epochs = 1
+# total_examples = 14424
+total_examples = 100
+pct_train = 0.8
+pct_valid = 0.1
+pct_test = 0.1
+
+nb_train = math.floor(total_examples * pct_train)
+nb_valid = math.floor(total_examples * pct_valid)
+nb_test = math.floor(total_examples * pct_test)
 
 train, valid, test = generate("data/driving_log.csv",
-                              pct_train=0.8,
-                              pct_valid=0.1,
-                              pct_test=0.1)
+                              pct_train=pct_train,
+                              pct_valid=pct_valid,
+                              pct_test=pct_test)
 
 def resize(x):
     import tensorflow as tf
@@ -31,13 +41,13 @@ model.add(Flatten())
 model.add(Dense(1))
 model.add(LeakyReLU())
 
-model.compile(loss='mse', optimizer=Adam(lr=0.1))
+model.compile(loss='mse', optimizer="adam")
 
 history = model.fit_generator(generator=train,
-                              samples_per_epoch=samples_per_epoch,
+                              samples_per_epoch=nb_train,
                               nb_epoch=nb_epochs,
                               validation_data=valid,
-                              nb_val_samples=256,
+                              nb_val_samples=nb_valid,
                               callbacks=[])
 
 
@@ -45,8 +55,7 @@ h = history.history
 print("training loss: {}".format(h["loss"][-1]))
 print("validation loss: {}".format(h["val_loss"][-1]))
 
-j = model.to_json()
-with open("model.json", "w") as f:
-    json.dump(j, f)
+out = model.evaluate_generator(test, val_samples=nb_test)
+print("test loss: {}".format(out))
 
-model.save_weights("model.h5")
+save(model)
