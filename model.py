@@ -12,11 +12,11 @@ import math
 
 nb_epochs = 16
 nb_proportion = 8
-total_examples = 19519
+total_examples = 22147
 # total_examples = 100
-pct_train = 0.7
-pct_valid = 0.2
-pct_test = 0.1
+pct_train = 1.0
+pct_valid = 0.0
+pct_test = 0.0
 
 nb_train = math.floor(math.floor(total_examples * pct_train) / nb_proportion)
 nb_train = math.floor(math.floor(total_examples * pct_train) / nb_proportion)
@@ -43,21 +43,21 @@ model.add(BatchNormalization())
 model.add(Convolution2D(32, 3, 3))
 model.add(LeakyReLU())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.75))
+model.add(Dropout(0.25))
 
 model.add(Convolution2D(16, 3, 3))
 model.add(LeakyReLU())
 model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
+model.add(Dropout(0.25))
 
 model.add(Convolution2D(32, 3, 3))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(1, 1)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
 model.add(Convolution2D(16, 3, 3))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(1, 1)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 
 model.add(Flatten())
@@ -78,16 +78,15 @@ model.compile(loss='mse', optimizer=Adam(lr=0.00005))
 history = model.fit_generator(generator=train,
                               samples_per_epoch=nb_train,
                               nb_epoch=nb_epochs,
-                              validation_data=valid,
-                              nb_val_samples=nb_valid,
+                              # validation_data=valid,
+                              # nb_val_samples=nb_valid,
                               callbacks=[])
 
 
 h = history.history
 print("training loss: {}".format(h["loss"][-1]))
-print("validation loss: {}".format(h["val_loss"][-1]))
-
-out = model.evaluate_generator(test, val_samples=nb_test)
-print("test loss: {}".format(out))
+# print("validation loss: {}".format(h["val_loss"][-1]))
+# out = model.evaluate_generator(test, val_samples=nb_test)
+# print("test loss: {}".format(out))
 
 save(model)
