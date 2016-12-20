@@ -5,8 +5,10 @@ from split import split
 
 def generator(data):
     shuffle(data)
-    for image, steering in data:
-        yield (prepare_feature(image), prepare_label(steering))
+    for center, left, right, steering in data:
+        yield (prepare_feature(center), prepare_label(steering))
+        yield (prepare_feature(left), prepare_label(float(steering) + 0.1))
+        yield (prepare_feature(right), prepare_label(float(steering) - 0.1))
 
 def infinite_generator(data):
     g = generator(data)

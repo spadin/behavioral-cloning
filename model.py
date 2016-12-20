@@ -1,19 +1,19 @@
 from generate import generate
-from save import save
+from save import save, save_json
 from keras.layers import Activation, Convolution2D, Dense, Dropout, Flatten, Input, Lambda, MaxPooling2D
 from keras.models import Sequential
 from keras.optimizers import Adam
 from keras.layers.normalization import BatchNormalization
 from keras.layers.advanced_activations import ELU, LeakyReLU
 from keras.applications.inception_v3 import InceptionV3
+from keras.callbacks import ModelCheckpoint
 import numpy as np
 import json
 import math
 
-nb_epochs = 16
-nb_proportion = 8
-total_examples = 22147
-# total_examples = 100
+nb_epochs = 3
+nb_proportion = 1
+total_examples = 21832
 pct_train = 1.0
 pct_valid = 0.0
 pct_test = 0.0
@@ -38,49 +38,44 @@ def normalize(x):
 model = Sequential()
 model.add(Lambda(resize, input_shape=(160, 320, 3), name="resize"))
 model.add(Lambda(normalize, name="normalize"))
-model.add(BatchNormalization())
 
-model.add(Convolution2D(32, 3, 3))
+model.add(Convolution2D(24, 5, 5, subsample=(2, 2), border_mode="same"))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
 
-model.add(Convolution2D(16, 3, 3))
+model.add(Convolution2D(36, 5, 5, subsample=(2, 2), border_mode="same"))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
 
-model.add(Convolution2D(32, 3, 3))
+model.add(Convolution2D(48, 5, 5, subsample=(2, 2), border_mode="same"))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
 
-model.add(Convolution2D(16, 3, 3))
+model.add(Convolution2D(64, 3, 3, subsample=(2, 2), border_mode="same"))
 model.add(LeakyReLU())
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
 
+model.add(Convolution2D(64, 3, 3, subsample=(2, 2), border_mode="same"))
 model.add(Flatten())
-
-model.add(Dense(64))
 model.add(LeakyReLU())
-model.add(Dropout(0.5))
 
-model.add(Dense(32))
+model.add(Dense(100))
 model.add(LeakyReLU())
-model.add(Dropout(0.5))
+
+model.add(Dense(50))
+model.add(LeakyReLU())
+
+model.add(Dense(10))
+model.add(LeakyReLU())
 
 model.add(Dense(1))
-model.add(LeakyReLU())
 
-model.compile(loss='mse', optimizer=Adam(lr=0.00005))
+model.compile(loss='mse', optimizer=Adam(lr=0.0001))
 
+checkpoint = ModelCheckpoint(filepath="model.{epoch:02d}.h5", save_weights_only=True)
+save_json(model)
 history = model.fit_generator(generator=train,
                               samples_per_epoch=nb_train,
                               nb_epoch=nb_epochs,
                               # validation_data=valid,
                               # nb_val_samples=nb_valid,
-                              callbacks=[])
+                              callbacks=[checkpoint])
 
 
 h = history.history
@@ -88,5 +83,4 @@ print("training loss: {}".format(h["loss"][-1]))
 # print("validation loss: {}".format(h["val_loss"][-1]))
 # out = model.evaluate_generator(test, val_samples=nb_test)
 # print("test loss: {}".format(out))
-
-save(model)
+# save(model)
