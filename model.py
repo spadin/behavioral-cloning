@@ -1,12 +1,7 @@
 from generate import generate
 from save import save, save_json
-from keras.layers import Activation, Convolution2D, Dense, Dropout, Flatten, Input, Lambda, MaxPooling2D
-from keras.models import Sequential
-from keras.optimizers import Adam
-from keras.layers.normalization import BatchNormalization
-from keras.layers.advanced_activations import ELU, LeakyReLU
-from keras.applications.inception_v3 import InceptionV3
 from keras.callbacks import ModelCheckpoint
+from models.cnn_model_1 import cnn_model_1
 import numpy as np
 import json
 import math
@@ -28,45 +23,7 @@ train, valid, test = generate("data/driving_log.csv",
                               pct_valid=pct_valid,
                               pct_test=pct_test)
 
-def resize(x):
-    import tensorflow as tf
-    return tf.image.resize_images(x, (80, 160))
-
-def normalize(x):
-    return x / 127.5 - 1
-
-model = Sequential()
-model.add(Lambda(resize, input_shape=(160, 320, 3), name="resize"))
-model.add(Lambda(normalize, name="normalize"))
-
-model.add(Convolution2D(24, 5, 5, subsample=(2, 2), border_mode="same"))
-model.add(LeakyReLU())
-
-model.add(Convolution2D(36, 5, 5, subsample=(2, 2), border_mode="same"))
-model.add(LeakyReLU())
-
-model.add(Convolution2D(48, 5, 5, subsample=(2, 2), border_mode="same"))
-model.add(LeakyReLU())
-
-model.add(Convolution2D(64, 3, 3, subsample=(2, 2), border_mode="same"))
-model.add(LeakyReLU())
-
-model.add(Convolution2D(64, 3, 3, subsample=(2, 2), border_mode="same"))
-model.add(Flatten())
-model.add(LeakyReLU())
-
-model.add(Dense(100))
-model.add(LeakyReLU())
-
-model.add(Dense(50))
-model.add(LeakyReLU())
-
-model.add(Dense(10))
-model.add(LeakyReLU())
-
-model.add(Dense(1))
-
-model.compile(loss='mse', optimizer=Adam(lr=0.0001))
+model = cnn_model_1()
 
 checkpoint = ModelCheckpoint(filepath="model.{epoch:02d}.h5", save_weights_only=True)
 save_json(model)
