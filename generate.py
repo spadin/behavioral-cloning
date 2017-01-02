@@ -24,12 +24,6 @@ def generate(filepath, pct_train, pct_valid, pct_test):
 
     train, valid, test = split(data, pct_train, pct_valid, pct_test)
 
-    print("Generating data")
-    print("total data length: {}".format(len(train) + len(valid) + len(test)))
-    print("train length: {}".format(len(train)))
-    print("valid length: {}".format(len(valid)))
-    print("test length: {}".format(len(test)))
-
     return (infinite_generator(train),
             infinite_generator(valid),
             infinite_generator(test))
