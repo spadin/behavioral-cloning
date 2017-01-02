@@ -59,12 +59,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Remote Driving')
     parser.add_argument('model', type=str,
     help='Path to model definition json. Model weights should be on the same path.')
+
+    parser.add_argument('weights', type=str,
+    help='Path to weights h5.')
     args = parser.parse_args()
     with open(args.model, 'r') as jfile:
         model = model_from_json(json.load(jfile))
 
     model.compile("adam", "mse")
-    weights_file = args.model.replace('json', 'h5')
+    # weights_file = args.model.replace('json', 'h5')
+    weights_file = args.weights
     model.load_weights(weights_file)
 
     # wrap Flask application with engineio's middleware
