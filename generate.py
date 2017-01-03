@@ -1,9 +1,12 @@
 from scipy.misc import imread
-from shuffle import shuffle
 from split import split
 import csv
 import numpy as np
+import random
 import sys
+
+def shuffle(data):
+    return random.shuffle(data)
 
 def prepare_feature(image):
     return np.array([imread("{}/{}".format("data", image))]).astype(np.float32)
