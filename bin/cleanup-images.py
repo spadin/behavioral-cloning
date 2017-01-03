@@ -20,5 +20,7 @@ if __name__ == "__main__":
     """
     difference = actual_image_files() - files_in_csv()
 
+    print("Deleting {} images".format(len(difference)))
+
     for filename in difference:
         os.remove("{}/{}".format("data/IMG", filename))
