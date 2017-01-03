@@ -6,7 +6,6 @@ def save(model, filename="model.json"):
 
     model.save_weights(filename.replace("json","h5"))
 
-
 def save_json(model, filename="model.json"):
     with open(filename, "w") as f:
         json.dump(model.to_json(), f)
