@@ -1,8 +1,6 @@
-import csv
 import math
-import random
 
-def slices(rows, pct_train, pct_valid, pct_test):
+def row_slices(rows, pct_train, pct_valid, pct_test):
     nb_rows = len(rows)
 
     split_1 = math.floor(nb_rows * pct_train)
@@ -13,10 +11,10 @@ def slices(rows, pct_train, pct_valid, pct_test):
             slice(split_1, split_2),
             slice(split_2, split_3))
 
-def slice_rows(rows, pct_train, pct_valid, pct_test):
-    train, valid, test = slices(rows, pct_train, pct_valid, pct_test)
-    return (rows[train], rows[valid], rows[test])
-
 def split(data, pct_train, pct_valid, pct_test):
-    return slice_rows(data, pct_train, pct_valid, pct_test)
+    train_slice, valid_slice, test_slice = row_slices(rows, pct_train, pct_valid, pct_test)
+
+    return (rows[train_slice],
+            rows[valid_slice],
+            rows[test_slice])
 
