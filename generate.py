@@ -19,6 +19,20 @@ def infinite_generator(data):
             g = generator(data)
 
 def generate(filepath, pct_train, pct_valid, pct_test):
+    """
+    Create generators for the driving log data at filepath. Shuffles data the
+    data before splitting and reshuffles again after each generator is
+    exhausted.
+
+    Note: pct_train + pct_valid + pct_test (must =) 1
+
+    Arguments:
+    filepath  -- path to driving_log.csv file
+    pct_train -- (eg. 0.9) percentage split for training data
+    pct_valid -- (eg. 0.1) percentage split for validation data
+    pct_test  -- (eg. 0.0) percentage split for test data
+
+    """
     data = read(filepath)
     shuffle(data)
 
