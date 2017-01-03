@@ -1,7 +1,14 @@
-from read import read
 from shuffle import shuffle
 from prepare import prepare_feature, prepare_label
 from split import split
+import csv
+import sys
+
+def read(filepath):
+    with open(filepath) as csv_file:
+        csvreader = csv.reader(csv_file, skipinitialspace=True)
+        next(csvreader) # skip header row
+        return [(row[0], row[1], row[2], row[3]) for row in csvreader]
 
 def generator(data):
     shuffle(data)
