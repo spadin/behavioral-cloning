@@ -1,10 +1,13 @@
 from generate import generate
-from save import save, save_json
 from keras.callbacks import ModelCheckpoint
 from models.cnn_model_1 import cnn_model_1
 import numpy as np
 import json
 import math
+
+def save_model_architecture(model, filename="model.json"):
+    with open(filename, "w") as f:
+        json.dump(model.to_json(), f)
 
 nb_epochs = 100
 nb_proportion = 1
@@ -26,7 +29,7 @@ train, valid, test = generate("data/driving_log.csv",
 model = cnn_model_1()
 
 checkpoint = ModelCheckpoint(filepath="model.{epoch:02d}.h5", save_weights_only=True)
-save_json(model)
+save_model_architecture(model)
 history = model.fit_generator(generator=train,
                               samples_per_epoch=nb_train,
                               nb_epoch=nb_epochs,
