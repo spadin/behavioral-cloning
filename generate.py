@@ -3,7 +3,6 @@ from split import split
 import csv
 import numpy as np
 import random
-import sys
 
 def shuffle(data):
     return random.shuffle(data)
