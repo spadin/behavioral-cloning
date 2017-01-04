@@ -1,6 +1,18 @@
-WIP, this doesn't work yet.
-
 # Behavioral Cloning Project
+
+## Table of Contents
+
+1. [About the model](#about-the-model)
+1. [Before you begin](#before-you-begin)
+1. [Splitting the data](#splitting-the-data)
+1. [Training the model](#training-the-model)
+1. [Running the drive server](#running-the-drive-server)
+
+## About the model
+
+A model with the following architecture is used.
+
+![Model architecture](./model.png?raw=true)
 
 ## Before you begin
 
@@ -37,7 +49,7 @@ were just trained.
 Note: if the model doesn't find training, validation, and test datasets in
 `data` it will try running `prepare`.
 
-## Run the drive server
+## Running the drive server
 
 Once you've trained the model, or if you have a `model.json` and `model.h5`
 files, you can run the driving server.
