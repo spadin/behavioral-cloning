@@ -5,7 +5,6 @@
 1. [About the model](#about-the-model)
 1. [Training dataset](#training-dataset)
 1. [Before you begin](#before-you-begin)
-1. [Splitting the data](#splitting-the-data)
 1. [Training the model](#training-the-model)
 1. [Running the drive server](#running-the-drive-server)
 
@@ -46,23 +45,6 @@ Here's an example of the three different types of images.
 
 You'll need some data. You can generate your data by running the simulator in
 training mode, or download the [dataset from class.][1]
-
-## Splitting the data
-
-The data from class needs to be split into a training set, validation set, and
-test set. This can be done any number of times, but must be done at least once.
-This will write three files that can be loaded later for extracting features
-from related images.
-
-```sh
-$ python split.py
-```
-
-Writes:
-
-  * data/train_driving_log.csv
-  * data/valid_driving_log.csv
-  * data/test_driving_log.csv
 
 ## Training the model
 
