@@ -9,6 +9,9 @@ def save_model_architecture(model, filename="model.json"):
     with open(filename, "w") as f:
         json.dump(model.to_json(), f)
 
+def checkpoint(filepattern="model.{epoch:02d}.h5"):
+    return ModelCheckpoint(filepattern, save_weights_only=True)
+
 nb_epochs = 100
 nb_proportion = 1
 total_examples = 24108
@@ -27,20 +30,11 @@ train, valid, test = generate("data/driving_log.csv",
                               pct_test=pct_test)
 
 model = cnn_model_1()
-
-checkpoint = ModelCheckpoint(filepath="model.{epoch:02d}.h5", save_weights_only=True)
+model.compile(loss='mse', optimizer=Adam(lr=0.0001))
 save_model_architecture(model)
-history = model.fit_generator(generator=train,
-                              samples_per_epoch=nb_train,
-                              nb_epoch=nb_epochs,
-                              nb_val_samples=nb_valid,
-                              validation_data=valid,
-                              callbacks=[checkpoint])
-
-
-h = history.history
-print("training loss: {}".format(h["loss"][-1]))
-# print("validation loss: {}".format(h["val_loss"][-1]))
-# out = model.evaluate_generator(test, val_samples=nb_test)
-# print("test loss: {}".format(out))
-# save(model)
+model.fit_generator(generator=train,
+                    samples_per_epoch=nb_train,
+                    nb_epoch=nb_epochs,
+                    nb_val_samples=nb_valid,
+                    validation_data=valid,
+                    callbacks=[checkpoint()])

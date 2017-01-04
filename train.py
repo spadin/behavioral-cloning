@@ -7,6 +7,15 @@ import math
 import sys
 import json
 
+def load_model(filename):
+    json_file = sys.argv[1]
+    with open(json_file, 'r') as f:
+        j = json.load(f)
+        return model_from_json(j)
+
+def checkpoint(filepattern="model.retrain.{epoch:02d}.h5"):
+    return ModelCheckpoint(filepattern, save_weights_only=True)
+
 nb_epochs = 10
 nb_proportion = 1
 total_examples = 24108
@@ -24,19 +33,11 @@ train, valid, test = generate("data/driving_log.csv",
                               pct_valid=pct_valid,
                               pct_test=pct_test)
 
-json_file = sys.argv[1]
-with open(json_file, 'r') as f:
-    j = json.load(f)
-    model = model_from_json(j)
-
+model = load_model(sys.argv[1])
 model.load_weights(json_file.replace("json", "h5"))
 model.compile(loss='mse', optimizer=Adam(lr=0.0001))
 
-checkpoint = ModelCheckpoint(filepath="model.retrain.{epoch:02d}.h5", save_weights_only=True)
-history = model.fit_generator(generator=train,
-                              samples_per_epoch=nb_train,
-                              nb_epoch=nb_epochs,
-                              callbacks=[checkpoint])
-
-h = history.history
-print("training loss: {}".format(h["loss"][-1]))
+model.fit_generator(generator=train,
+                    samples_per_epoch=nb_train,
+                    nb_epoch=nb_epochs,
+                    callbacks=[checkpoint()])

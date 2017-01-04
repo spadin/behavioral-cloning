@@ -47,9 +47,6 @@ def cnn_model_1():
 
     model.add(Dense(1))
 
-    model.compile(loss='mse', optimizer=Adam(lr=0.0001))
-    # model.compile(loss='mse', optimizer='adam')
-
     return model
 
 if __name__ == "__main__":
