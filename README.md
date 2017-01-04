@@ -52,12 +52,9 @@ training mode, or download the [dataset from class.][1]
 $ python model.py
 ```
 
-Training the model will result in two files being generated. `model.json`
-includes the model architecture. `model.h5` includes the model weights that
-were just trained.
-
-Note: if the model doesn't find training, validation, and test datasets in
-`data` it will try running `prepare`.
+Training the model will result in several files being generated. `model.json`
+includes the model architecture. `model.NN.h5` includes the model weights that
+were just trained at a certain epoch.
 
 ## Running the drive server
 
@@ -65,7 +62,14 @@ Once you've trained the model, or if you have a `model.json` and `model.h5`
 files, you can run the driving server.
 
 ```sh
-$ python drive.py model.json
+$ python drive.py model.json model.h5
+```
+
+Note: If you used the method I described above to train the model, you'll need
+to use a `model.NN.h5` file.
+
+```sh
+$ python drive.py model.json model.NN.h5
 ```
 
 [1]: https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip
