@@ -3,6 +3,7 @@
 ## Table of Contents
 
 1. [About the model](#about-the-model)
+1. [Training dataset](#training-dataset)
 1. [Before you begin](#before-you-begin)
 1. [Splitting the data](#splitting-the-data)
 1. [Training the model](#training-the-model)
@@ -13,6 +14,33 @@
 A model with the following architecture is used.
 
 ![Model architecture](./model.png?raw=true)
+
+## Training dataset
+
+The model was trained on an AWS g2.2xlarge EC2 instance. The model ran for a
+total of 100 epochs. At each epoch, the checkpoint of the model would be
+created, which saved the weights at that epoch.
+
+I ran the model after each epoch in the simulator. The first successful lap
+was done at epoch 17. But, no other epoch did a successful lap until epoch 34.
+
+The left, right and center images are used in training. I've added 0.1 (2.5
+degrees) to the left images and -0.1 to the right images to compensate for the
+difference in camera angle.
+
+Here's an example of the three different types of images.
+
+**Left image**
+
+![Left image](./left_2016_12_19_20_10_35_002.jpg?raw=true)
+
+**Center image**
+
+![Center image](./center_2016_12_19_20_10_35_002.jpg?raw=true)
+
+**Right image**
+
+![Right image](./right_2016_12_19_20_10_35_002.jpg?raw=true)
 
 ## Before you begin
 
