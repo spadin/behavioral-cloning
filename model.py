@@ -1,6 +1,6 @@
 from generate import generate
 from keras.callbacks import ModelCheckpoint
-from models.cnn_model_1 import cnn_model_1
+from model_architecture import model_architecture
 import numpy as np
 import json
 import math
@@ -29,43 +29,7 @@ train, valid, test = generate("data/driving_log.csv",
                               pct_valid=pct_valid,
                               pct_test=pct_test)
 
-def crop(x):
-    import tensorflow as tf
-    return x[:, 60:134, 0:320]
-
-def normalize(x):
-    return x / 127.5 - 1
-
-model = Sequential()
-model.add(Lambda(crop, input_shape=(160, 320, 3), name="crop"))
-model.add(Lambda(normalize, name="normalize"))
-
-model.add(Convolution2D(10, 2, 2, subsample=(2, 2), border_mode="valid"))
-model.add(LeakyReLU())
-
-model.add(Convolution2D(10, 2, 2, subsample=(2, 2), border_mode="valid"))
-model.add(LeakyReLU())
-
-model.add(MaxPooling2D())
-
-model.add(Convolution2D(10, 2, 2, subsample=(2, 2), border_mode="valid"))
-model.add(LeakyReLU())
-
-model.add(Convolution2D(10, 2, 2, subsample=(2, 2), border_mode="valid"))
-model.add(LeakyReLU())
-
-model.add(MaxPooling2D())
-
-model.add(Flatten())
-
-model.add(Dense(100))
-model.add(LeakyReLU())
-
-model.add(Dense(50))
-model.add(LeakyReLU())
-
-model.add(Dense(1))
-
+model = model_architecture()
 model.compile(loss='mse', optimizer=Adam(lr=0.0001))
 save_model_architecture(model)
 model.fit_generator(generator=train,
