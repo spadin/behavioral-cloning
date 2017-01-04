@@ -31,15 +31,15 @@ Here's an example of the three different types of images.
 
 **Left image**
 
-![Left image](./left_2016_12_19_20_10_35_002.jpg?raw=true)
+![Left image](./images/left_2016_12_19_20_10_35_002.jpg?raw=true)
 
 **Center image**
 
-![Center image](./center_2016_12_19_20_10_35_002.jpg?raw=true)
+![Center image](./images/center_2016_12_19_20_10_35_002.jpg?raw=true)
 
 **Right image**
 
-![Right image](./right_2016_12_19_20_10_35_002.jpg?raw=true)
+![Right image](./images/right_2016_12_19_20_10_35_002.jpg?raw=true)
 
 ## Before you begin
 
