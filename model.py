@@ -1,5 +1,6 @@
 from generate import generate
 from keras.callbacks import ModelCheckpoint
+from keras.optimizers import Adam
 from model_architecture import model_architecture
 import numpy as np
 import json

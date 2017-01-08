@@ -24,9 +24,9 @@ def split(data, pct_train, pct_valid, pct_test):
     Note: pct_train + pct_valid + pct_test must equal 1. And each should be
     between 0.0 and 1.0.
     """
-    train_slice, valid_slice, test_slice = row_slices(rows, pct_train, pct_valid, pct_test)
+    train_slice, valid_slice, test_slice = row_slices(data, pct_train, pct_valid, pct_test)
 
-    return (rows[train_slice],
-            rows[valid_slice],
-            rows[test_slice])
+    return (data[train_slice],
+            data[valid_slice],
+            data[test_slice])
 
