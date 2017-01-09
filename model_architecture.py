@@ -23,10 +23,10 @@ def model_architecture():
 
     model.add(MaxPooling2D())
 
-    model.add(Convolution2D(32, 2, 2, subsample=(2, 2), border_mode="same"))
+    model.add(Convolution2D(2, 2, 2, subsample=(2, 2), border_mode="same"))
     model.add(LeakyReLU())
 
-    model.add(Convolution2D(64, 2, 2, subsample=(2, 2), border_mode="same"))
+    model.add(Convolution2D(4, 2, 2, subsample=(2, 2), border_mode="same"))
     model.add(LeakyReLU())
 
     model.add(MaxPooling2D())
