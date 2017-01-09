@@ -12,7 +12,54 @@
 
 A model with the following architecture is used.
 
-![Model architecture](./model.png?raw=true)
+```python
+# crops incoming image, removes sky and car hood
+Lambda(crop, input_shape=(160, 320, 3), name="crop")
+
+# normalizes input values to between -1.0 and 1.0
+Lambda(normalize, name="normalize")
+
+# 2x2x3 convolution with 32 filters, stride of 2
+Convolution2D(32, 2, 2, subsample=(2, 2), border_mode="same")
+# activation
+LeakyReLU()
+
+# 2x2x3 convolution with 64 filters, stride of 2
+Convolution2D(64, 2, 2, subsample=(2, 2), border_mode="same"))
+# activation
+LeakyReLU()
+
+# pooling layers, pool_size of 2
+MaxPooling2D()
+
+# 2x2x3 convolution with 2 filters, stride of 2
+Convolution2D(2, 2, 2, subsample=(2, 2), border_mode="same"))
+# activation
+LeakyReLU()
+
+# 2x2x3 convolution with 4 filters, stride of 2
+Convolution2D(4, 2, 2, subsample=(2, 2), border_mode="same"))
+# activation
+LeakyReLU()
+
+# pooling layers, pool_size of 2
+MaxPooling2D()
+
+# flatten data for fully-connected layers
+Flatten()
+
+# fully connected layer
+Dense(100)
+# activation
+LeakyReLU()
+
+# fully connected layer
+Dense(50))
+# activation
+LeakyReLU()
+
+Dense(1)
+```
 
 ## Training dataset
 
