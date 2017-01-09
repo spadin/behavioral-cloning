@@ -2,13 +2,11 @@
 
 ## Table of Contents
 
-1. [About the model](#about-the-model)
-1. [Training dataset](#training-dataset)
-1. [Before you begin](#before-you-begin)
-1. [Training the model](#training-the-model)
-1. [Running the drive server](#running-the-drive-server)
+1. [Model architecture design](#model-architecture-design)
+1. [Architecture characteristics](#architecture-characteristics)
+1. [Model training](#model-training)
 
-## About the model
+## Model architecture design
 
 A model with the following architecture is used.
 
@@ -61,14 +59,45 @@ LeakyReLU()
 Dense(1)
 ```
 
-## Training dataset
+## Architecture characteristics
+
+I started building my model as a single layer deep neural network. I wanted to
+build the simplest network possible before I started adding convolutions and
+layers. I worked on the pipeline and generating images from the drive log first
+in order to make sure the model was getting good data before expanding on the
+model.
+
+Once I felt the pipeline was in a good place, I added a convolution layer to
+the model. After tuning the number of filters and the convolution size several
+times without a successful run around the track, I decided to add another
+convolution layer and a max pooling layer. I still had not completed a full
+circuit around the track, so I doubled the convolution layers and added
+another max pooling layer.
+
+At that point, with the model above, I was able to complete a run around the
+track, however, I was crossing some yellow lines of going on the curbs. I
+wanted to keep the size of the convolutions small so I could have multiple
+convolutions, so I decided to tune the number of filters per convolution. After
+several iterations of experimentation I landed on some hyperparameters I was
+happy with.
+
+For calculating loss, I used mean-squared error. I didn't find the MSE to be
+directly correlated to best performance. My best trained model, for example,
+had a validation loss of 0.0066, but the run with the lowest validation loss
+was 0.0052, and it crossed the yellow lines. I used the MSE to guide me towards
+which runs I should try run in the simulator first, but that's about it.
+
+This model is only suitable for this track, it doesn't generalize well. To
+generalize the model more, I could randomly change the brightness of some of
+the training images so the model can train in different lighting scenarios. I
+would also have to train the model in the second track so it can train on
+different sloped roads.
+
+## Model training
 
 The model was trained on an AWS g2.2xlarge EC2 instance. The model ran for a
 total of 100 epochs. At each epoch, the checkpoint of the model would be
 created, which saved the weights at that epoch.
-
-I ran the model after each epoch in the simulator. The first successful lap
-was done at epoch 17. But, no other epoch did a successful lap until epoch 34.
 
 The left, right and center images are used in training. I've added 0.1 (2.5
 degrees) to the left images and -0.1 to the right images to compensate for the
@@ -87,36 +116,3 @@ Here's an example of the three different types of images.
 **Right image**
 
 ![Right image](./images/right_2016_12_19_20_10_35_002.jpg?raw=true)
-
-## Before you begin
-
-You'll need some data. You can generate your data by running the simulator in
-training mode, or download the [dataset from class.][1]
-
-## Training the model
-
-```sh
-$ python model.py
-```
-
-Training the model will result in several files being generated. `model.json`
-includes the model architecture. `model.NN.h5` includes the model weights that
-were just trained at a certain epoch.
-
-## Running the drive server
-
-Once you've trained the model, or if you have a `model.json` and `model.h5`
-files, you can run the driving server.
-
-```sh
-$ python drive.py model.json model.h5
-```
-
-Note: If you used the method I described above to train the model, you'll need
-to use a `model.NN.h5` file.
-
-```sh
-$ python drive.py model.json model.NN.h5
-```
-
-[1]: https://d17h27t6h515a5.cloudfront.net/topher/2016/December/584f6edd_data/data.zip
